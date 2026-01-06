@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+.pnpm-store
+
+# Builds
+.next/
+out/
+build/
+
+# Variables de Entorno y Secretos (¡VITAL!)
+.env
+.env*.local
+.env.local
+supabase/.temp
+
+# Logs y OS
+.DS_Store
+*.log
