@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { signOut } from '@/app/login/actions' // Importamos la acción
+import { signOut } from '@/app/login/actions'
+import Link from 'next/link'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -51,9 +52,10 @@ export default async function Dashboard() {
             <div className="border border-indigo-200 rounded-lg p-6 bg-indigo-50">
               <h3 className="text-xl font-bold text-indigo-900 mb-4">Zona de Administración</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button className="p-4 bg-white rounded shadow text-left hover:bg-gray-50">
-                  Gestionar Alumnos
-                </button>
+                <Link href="/dashboard/students" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
+                  <div className="font-semibold text-indigo-700">Gestionar Alumnos</div>
+                  <p className="text-sm text-gray-500 mt-1">Ver listado, altas y bajas.</p>
+                </Link>
                 <button className="p-4 bg-white rounded shadow text-left hover:bg-gray-50">
                   Gestionar Pagos
                 </button>
