@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Esta opción es necesaria para usar Docker con output reducido
-  output: 'standalone', 
-  
+  output: 'standalone',
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'http',
@@ -11,7 +15,6 @@ const nextConfig = {
         port: '54321',
         pathname: '/storage/v1/object/public/**',
       },
-      // Si en el futuro despliegas a producción en supabase.co, añadirás esa regla aquí
     ],
   },
 };

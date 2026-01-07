@@ -1,6 +1,15 @@
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import Image from 'next/image'
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const { data: images } = await supabase
+    .from('gallery_images')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(6)
+
   return (
     <div className="min-h-screen bg-white">
       {/* HEADER / NAVIGATION */}
@@ -58,21 +67,22 @@ export default function Home() {
         </div>
       </div>
 
-      {/* GALLERY SECTION (Placeholder for now) */}
-      <section id="gallery" className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:text-center mb-10">
-            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Nuestra Vida</h2>
-            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Galería de Fotos
-            </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {images?.map((img) => (
+          <div key={img.id} className="relative h-64 rounded-lg overflow-hidden shadow-lg">
+            <Image 
+              src={img.image_url} 
+              alt={img.title || ''} 
+              fill 
+              unoptimized 
+              className="object-cover"
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm">
+              {img.title}
+            </div>
           </div>
-          
-          <div className="border-4 border-dashed border-gray-200 rounded-lg h-64 flex items-center justify-center">
-            <p className="text-gray-400">Aquí cargaremos las imágenes desde Supabase Storage pronto...</p>
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
 
        {/* FOOTER */}
        <footer className="bg-gray-800 text-white py-8">

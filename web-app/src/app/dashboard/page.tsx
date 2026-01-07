@@ -59,9 +59,10 @@ export default async function Dashboard() {
                 <button className="p-4 bg-white rounded shadow text-left hover:bg-gray-50">
                   Gestionar Pagos
                 </button>
-                <button className="p-4 bg-white rounded shadow text-left hover:bg-gray-50">
-                  Subir Fotos / Blog
-                </button>
+              <Link href="/dashboard/gallery" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
+                <div className="font-semibold text-indigo-700">📸 Galería</div>
+                <p className="text-sm text-gray-500 mt-1">Subir fotos a la web pública.</p>
+              </Link>
               </div>
             </div>
           )}

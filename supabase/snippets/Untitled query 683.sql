@@ -1,0 +1,1 @@
+select image_url from gallery_images
