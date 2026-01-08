@@ -5,14 +5,21 @@ import Image from 'next/image'
 export default async function Home() {
   const supabase = await createClient()
 
-  // Fetch images for the gallery
+  // 1. Fetch images (Gallery)
   const { data: images } = await supabase
     .from('gallery_images')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(6)
 
-  // Fetch published blog posts
+  // 2. Fetch active courses (NUEVO)
+  const { data: courses } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('is_active', true) // Solo mostramos los activos
+    .order('start_date', { ascending: true })
+
+  // 3. Fetch blog posts
   const { data: posts } = await supabase
     .from('posts')
     .select('*')
@@ -30,6 +37,7 @@ export default async function Home() {
               ⛸️ Club Patinaje
             </div>
             <nav className="hidden md:flex space-x-8">
+              <a href="#courses" className="text-gray-500 hover:text-indigo-600 transition">Cursos</a>
               <a href="#gallery" className="text-gray-500 hover:text-indigo-600 transition">Galería</a>
               <a href="#blog" className="text-gray-500 hover:text-indigo-600 transition">Noticias</a>
               <a href="#contact" className="text-gray-500 hover:text-indigo-600 transition">Contacto</a>
@@ -47,7 +55,7 @@ export default async function Home() {
       </header>
 
       {/* HERO SECTION */}
-      <section className="relative pt-16 bg-gray-50 overflow-hidden">
+      <section className="relative pt-24 pb-16 bg-gray-50 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 bg-gray-50 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
@@ -62,9 +70,9 @@ export default async function Home() {
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
-                    <Link href="/login" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg transition">
-                      Inscribirse
-                    </Link>
+                    <a href="#courses" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg transition">
+                      Ver Cursos
+                    </a>
                   </div>
                 </div>
               </div>
@@ -76,8 +84,61 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* COURSES SECTION (NUEVA SECCIÓN) */}
+      <section id="courses" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Temporada 2026</h2>
+            <p className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">Oferta Formativa</p>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+              Grupos abiertos para inscripción. Encuentra tu nivel y horario.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {courses?.length === 0 ? (
+               <p className="col-span-full text-center text-gray-400 py-10">Próximamente abriremos nuevos cursos.</p>
+            ) : (
+              courses?.map((course) => (
+                <div key={course.id} className="flex flex-col bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                  <div className="p-6 flex-1">
+                    <h3 className="text-xl font-bold text-gray-900">{course.title}</h3>
+                    <p className="mt-2 text-sm text-gray-500 line-clamp-3">
+                      {course.description || 'Consulta los detalles en secretaría.'}
+                    </p>
+                    
+                    <div className="mt-6 space-y-3">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <span className="mr-2 text-xl">⏱️</span>
+                        <span className="font-semibold text-indigo-600">{course.hours_per_week} horas</span>
+                        <span className="ml-1">/ semana</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                         <span className="mr-2 text-xl">📅</span>
+                         <span>
+                           {new Date(course.start_date).toLocaleDateString()} - {new Date(course.end_date).toLocaleDateString()}
+                         </span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                         <span className="mr-2 text-xl">👥</span>
+                         <span>Max. {course.capacity} alumnos</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                    <Link href="/login" className="block w-full text-center bg-white border border-indigo-600 text-indigo-600 font-semibold py-2 rounded-lg hover:bg-indigo-50 transition">
+                      Inscribirse
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* GALLERY SECTION */}
-      <section id="gallery" className="py-20 bg-white">
+      <section id="gallery" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Comunidad</h2>
@@ -108,7 +169,7 @@ export default async function Home() {
       </section>
 
       {/* BLOG SECTION */}
-      <section id="blog" className="py-20 bg-gray-50">
+      <section id="blog" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Noticias</h2>
@@ -140,7 +201,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* CONTACT SECTION (Simple Placeholder) */}
+      {/* CONTACT SECTION */}
       <section id="contact" className="py-20 bg-indigo-900 text-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">¿Tienes dudas?</h2>
