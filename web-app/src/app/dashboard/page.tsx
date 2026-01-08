@@ -120,6 +120,10 @@ export default async function DashboardPage() {
           <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📰 Noticias / Blog</h3>
           <p className="mt-2 text-sm text-gray-500">Publicar novedades para los padres.</p>
         </Link>
+        <Link href="/dashboard/users" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 hover:shadow-md transition cursor-pointer">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">👥 Usuarios y Permisos</h3>
+          <p className="mt-2 text-sm text-gray-500">Alta manual de staff y tutores.</p>
+        </Link>
 
       </div>
     </div>

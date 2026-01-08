@@ -93,6 +93,15 @@ export default async function CoursesDashboard() {
               <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end gap-3 items-center">
                 <span className="text-xs text-gray-300">ID: ...{course.id.slice(-4)}</span>
                 
+                {/* NUEVO: Botón Editar */}
+                <Link 
+                  href={`/dashboard/courses/${course.id}`} 
+                  className="text-indigo-600 hover:text-indigo-900 p-2 hover:bg-indigo-50 rounded transition"
+                  title="Editar curso"
+                >
+                    ✏️
+                </Link>
+                
                 {/* Delete Button */}
                 <form action={deleteCourse}>
                   <input type="hidden" name="id" value={course.id} />
@@ -100,7 +109,7 @@ export default async function CoursesDashboard() {
                     type="submit" 
                     className="text-red-600 hover:text-red-800 text-sm font-medium hover:underline bg-white"
                   >
-                    Eliminar
+                   🗑️ 
                   </button>
                 </form>
               </div>

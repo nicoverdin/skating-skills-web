@@ -57,3 +57,45 @@ export async function deleteCourse(formData: FormData) {
 
   revalidatePath('/dashboard/courses')
 }
+
+// ... (imports existentes) ...
+
+export async function updateCourse(formData: FormData) {
+  const supabase = await createClient()
+  
+  // Recogemos los datos del formulario
+  const id = formData.get('id') as string
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+  const coach_id = formData.get('coach_id') as string || null
+  const start_date = formData.get('start_date') as string
+  const end_date = formData.get('end_date') as string
+  
+  // Conversiones numéricas y booleanas
+  const hours_per_week = parseFloat(formData.get('hours_per_week') as string)
+  const capacity = parseInt(formData.get('capacity') as string)
+  // En HTML, si un checkbox no se marca, no se envía. Si se marca, envía "on".
+  const is_active = formData.get('is_active') === 'on'
+
+  const { error } = await supabase
+    .from('courses')
+    .update({
+      title,
+      description,
+      coach_id,
+      start_date,
+      end_date,
+      hours_per_week,
+      capacity,
+      is_active,
+    })
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error actualizando curso:', error)
+    throw new Error('No se pudo actualizar el curso')
+  }
+
+  revalidatePath('/dashboard/courses')
+  redirect('/dashboard/courses')
+}
