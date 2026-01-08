@@ -63,6 +63,10 @@ export default async function Dashboard() {
                 <div className="font-semibold text-indigo-700">📸 Galería</div>
                 <p className="text-sm text-gray-500 mt-1">Subir fotos a la web pública.</p>
               </Link>
+                <Link href="/dashboard/blog" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
+                  <div className="font-semibold text-indigo-700">📰 Blog y Noticias</div>
+                  <p className="text-sm text-gray-500 mt-1">Publicar novedades y eventos.</p>
+              </Link>
               </div>
             </div>
           )}
