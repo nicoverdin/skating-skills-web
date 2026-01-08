@@ -1,1 +1,1 @@
-select image_url from gallery_images
+SELECT * FROM student_billing_summary;

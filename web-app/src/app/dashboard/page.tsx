@@ -1,88 +1,126 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { signOut } from '@/app/login/actions'
 import Link from 'next/link'
 
-export default async function Dashboard() {
+export default async function DashboardPage() {
   const supabase = await createClient()
 
-  // 1. Get User Auth Data
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  // 1. Total Alumnos Activos
+  const { count: studentsCount } = await supabase
+    .from('students')
+    .select('*', { count: 'exact', head: true })
 
-  if (authError || !user) {
-    redirect('/login')
-  }
+  // 2. Total Cursos Activos
+  const { count: coursesCount } = await supabase
+    .from('courses')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_active', true)
 
-  // 2. Get User Profile Data (Role, Name, etc.)
-  // We use .single() because we expect exactly one profile per user
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  // 3. Estimación de Ingresos (Usando la Vista SQL)
+  // Si la vista no devuelve datos, asumimos 0
+  const { data: incomeData } = await supabase
+    .from('student_billing_summary')
+    .select('monthly_fee_eur')
+  
+  // Sumamos el total de todas las cuotas
+  const totalIncome = incomeData?.reduce((acc, curr) => acc + curr.monthly_fee_eur, 0) || 0
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Panel de Control
-          </h1>
-          
-          {/* Logout Button Form */}
-          <form action={signOut}>
-            <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm font-medium">
-              Cerrar Sesión
-            </button>
-          </form>
-        </div>
+    <div className="p-8 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Panel de Control</h1>
 
-        <div className="grid grid-cols-1 gap-6">
-          {/* User Info Card */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-blue-900">Sesión Activa</h2>
-            <p className="text-blue-800">Email: {user.email}</p>
-            <p className="text-blue-800 mt-1">
-              Rol detectado: <span className="font-bold uppercase badge bg-blue-200 px-2 py-1 rounded">{profile?.role || 'Sin Rol'}</span>
-            </p>
-          </div>
-
-          {/* Conditional Rendering based on Role */}
-          {profile?.role === 'admin' && (
-            <div className="border border-indigo-200 rounded-lg p-6 bg-indigo-50">
-              <h3 className="text-xl font-bold text-indigo-900 mb-4">Zona de Administración</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link href="/dashboard/students" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
-                  <div className="font-semibold text-indigo-700">Gestionar Alumnos</div>
-                  <p className="text-sm text-gray-500 mt-1">Ver listado, altas y bajas.</p>
-                </Link>
-                <button className="p-4 bg-white rounded shadow text-left hover:bg-gray-50">
-                  Gestionar Pagos
-                </button>
-                <Link href="/dashboard/gallery" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
-                  <div className="font-semibold text-indigo-700">📸 Galería</div>
-                  <p className="text-sm text-gray-500 mt-1">Subir fotos a la web pública.</p>
-                </Link>
-                <Link href="/dashboard/blog" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
-                  <div className="font-semibold text-indigo-700">📰 Blog y Noticias</div>
-                  <p className="text-sm text-gray-500 mt-1">Publicar novedades y eventos.</p>
-                </Link>
-                <Link href="/dashboard/courses" className="p-4 bg-white rounded shadow text-left hover:bg-gray-50 block">
-                  <div className="font-semibold text-indigo-700">📅 Cursos y Horarios</div>
-                  <p className="text-sm text-gray-500 mt-1">Definir clases y precios.</p>
-                </Link>
+      {/* STATS GRID */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-12">
+        
+        {/* Card 1: Students */}
+        <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-100">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                <span className="text-2xl">⛸️</span>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Alumnos Totales</dt>
+                  <dd className="text-3xl font-bold text-gray-900">{studentsCount || 0}</dd>
+                </dl>
               </div>
             </div>
-          )}
-
-          {profile?.role === 'member' || profile?.role === 'guardian' ? (
-            <div className="border border-green-200 rounded-lg p-6 bg-green-50">
-              <h3 className="text-xl font-bold text-green-900 mb-4">⛸️ Zona de Socio</h3>
-              <p>Aquí verás a tus hijos inscritos y tus recibos.</p>
-            </div>
-          ) : null}
-          
+          </div>
+          <div className="bg-gray-50 px-5 py-3">
+            <Link href="/dashboard/students" className="text-sm font-medium text-indigo-700 hover:text-indigo-900">
+              Ver listado completo
+            </Link>
+          </div>
         </div>
+
+        {/* Card 2: Income */}
+        <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-100">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
+                <span className="text-2xl">💰</span>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Ingresos Mensuales</dt>
+                  <dd className="text-3xl font-bold text-gray-900">{totalIncome}€</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-50 px-5 py-3">
+            <div className="text-sm text-gray-500">Estimación basada en inscripciones</div>
+          </div>
+        </div>
+
+        {/* Card 3: Active Courses */}
+        <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-100">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                <span className="text-2xl">📅</span>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Cursos Activos</dt>
+                  <dd className="text-3xl font-bold text-gray-900">{coursesCount || 0}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-50 px-5 py-3">
+             <Link href="/dashboard/courses" className="text-sm font-medium text-indigo-700 hover:text-indigo-900">
+              Gestionar horarios
+            </Link>
+          </div>
+        </div>
+
+      </div>
+
+      {/* QUICK LINKS */}
+      <h2 className="text-lg font-medium text-gray-900 mb-4">Accesos Rápidos</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        
+        <Link href="/dashboard/students" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 hover:shadow-md transition cursor-pointer">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">🎓 Gestionar Alumnos</h3>
+          <p className="mt-2 text-sm text-gray-500">Matricular nuevos patinadores y editar fichas.</p>
+        </Link>
+
+        <Link href="/dashboard/courses" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 hover:shadow-md transition cursor-pointer">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📅 Cursos y Horarios</h3>
+          <p className="mt-2 text-sm text-gray-500">Crear nuevas temporadas y grupos.</p>
+        </Link>
+
+        <Link href="/dashboard/gallery" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 hover:shadow-md transition cursor-pointer">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📸 Galería de Fotos</h3>
+          <p className="mt-2 text-sm text-gray-500">Subir imágenes a la web pública.</p>
+        </Link>
+
+        <Link href="/dashboard/blog" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 hover:shadow-md transition cursor-pointer">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📰 Noticias / Blog</h3>
+          <p className="mt-2 text-sm text-gray-500">Publicar novedades para los padres.</p>
+        </Link>
+
       </div>
     </div>
   )
