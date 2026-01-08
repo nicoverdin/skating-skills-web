@@ -125,9 +125,6 @@ CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR 
 CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
--- --- STUDENTS ---
-CREATE POLICY "Staff can manage students" ON public.students FOR ALL TO authenticated USING (true);
-
 -- --- COURSES ---
 CREATE POLICY "Courses are viewable by everyone" ON public.courses FOR SELECT TO public USING (true);
 CREATE POLICY "Staff can manage courses" ON public.courses FOR ALL TO authenticated USING (true);
@@ -145,6 +142,16 @@ CREATE POLICY "Staff can manage posts" ON public.posts FOR ALL TO authenticated 
 
 CREATE POLICY "Gallery is viewable by everyone" ON public.gallery_images FOR SELECT TO public USING (true);
 CREATE POLICY "Staff can manage gallery" ON public.gallery_images FOR ALL TO authenticated USING (true);
+
+CREATE POLICY "Admins can manage all students" 
+ON public.students FOR ALL 
+TO authenticated 
+USING ( (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin' );
+
+CREATE POLICY "Guardians can see and manage their own children" 
+ON public.students FOR ALL 
+TO authenticated 
+USING ( guardian_id = auth.uid() );
 
 -- =============================================
 -- 5. PERMISOS DE ACCESO A VISTAS
