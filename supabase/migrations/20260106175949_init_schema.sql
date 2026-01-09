@@ -108,13 +108,20 @@ SELECT
     s.first_name,
     s.last_name,
     s.guardian_id,
+    -- Datos del Tutor
+    p.first_name as guardian_first_name,
+    p.last_name as guardian_last_name,
+    p.iban as guardian_iban,
+    p.phone as guardian_phone,
+    -- Horas y Cálculos
     COALESCE(SUM(c.hours_per_week), 0) as total_hours,
-    -- Fórmula: 10€ Base + (10€ x Horas Totales)
+    -- Tu fórmula: 10€ Base + (10€ x Horas Totales)
     10 + (COALESCE(SUM(c.hours_per_week), 0) * 10) as monthly_fee_eur
 FROM students s
 LEFT JOIN enrollments e ON s.id = e.student_id 
 LEFT JOIN courses c ON e.course_id = c.id
-GROUP BY s.id;
+LEFT JOIN profiles p ON s.guardian_id = p.id
+GROUP BY s.id, p.id;
 
 -- =============================================
 -- 4. POLÍTICAS DE SEGURIDAD (RLS)

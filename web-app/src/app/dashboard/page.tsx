@@ -95,6 +95,11 @@ export default async function DashboardPage() {
               <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📅 Cursos</h3>
               <p className="mt-2 text-sm text-gray-500">Configurar horarios y precios.</p>
             </Link>
+
+            <Link href="/dashboard/billing" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">💳 Facturación</h3>
+              <p className="mt-2 text-sm text-gray-500">Gestión de cuotas, IBANs y remesas bancarias.</p>
+            </Link>
           </>
         )}
 
