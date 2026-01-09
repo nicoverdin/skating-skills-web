@@ -86,3 +86,16 @@ export async function exportBillingCSV() {
 
   return [header, ...rows].join("\n")
 }
+
+export async function updateInvoiceStatus(invoiceId: string, newStatus: 'paid' | 'failed' | 'pending') {
+  const supabase = await createClient()
+  
+  const { error } = await supabase
+    .from('invoices')
+    .update({ status: newStatus })
+    .eq('id', invoiceId)
+
+  if (error) throw new Error("No se pudo actualizar el estado")
+
+  revalidatePath('/dashboard/billing')
+}

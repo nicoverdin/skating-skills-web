@@ -39,7 +39,7 @@ export default function HomePage() {
             <div>
               <div className="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
               <h3 className="font-bold text-xl mb-2">Añade Alumnos</h3>
-              <p className="text-gray-500 text-sm">Introduce los datos de tus hijos y su nivel de patinaje.</p>
+              <p className="text-gray-500 text-sm">Introduce los datos del patinador y su nivel.</p>
             </div>
             <div>
               <div className="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>

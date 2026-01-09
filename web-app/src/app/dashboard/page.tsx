@@ -47,16 +47,13 @@ export default async function DashboardPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
         Bienvenido, {profile?.first_name} 
-        <span className="ml-3 text-sm font-normal text-gray-400 uppercase tracking-widest border px-2 py-1 rounded">
-          {profile?.role}
-        </span>
       </h1>
 
       {/* GRID DE ESTADÍSTICAS (Adaptado al Rol) */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-12">
         <div className="bg-white shadow rounded-lg p-5 border border-gray-100">
           <dt className="text-sm font-medium text-gray-500 truncate">
-            {isAdmin ? 'Alumnos Totales' : 'Mis Hijos Inscritos'}
+            {isAdmin ? 'Alumnos Totales' : 'Mis Alumnos Inscritos'}
           </dt>
           <dd className="mt-1 text-3xl font-bold text-indigo-600">{studentsCount}</dd>
         </div>
@@ -76,7 +73,7 @@ export default async function DashboardPage() {
         {/* Los Padres solo ven "Mis Alumnos", los Admin ven "Gestionar Alumnos" */}
         <Link href="/dashboard/students" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition">
           <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">
-            {isAdmin ? '🎓 Gestionar Alumnos' : '⛸️ Mis Hijos'}
+            {isAdmin ? '🎓 Gestionar Alumnos' : '🎓 Alumnos'}
           </h3>
           <p className="mt-2 text-sm text-gray-500">
             {isAdmin ? 'Administrar todos los patinadores.' : 'Ver progreso e inscripciones.'}
@@ -92,7 +89,7 @@ export default async function DashboardPage() {
             </Link>
 
             <Link href="/dashboard/courses" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition">
-              <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📅 Cursos</h3>
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📅 Clases</h3>
               <p className="mt-2 text-sm text-gray-500">Configurar horarios y precios.</p>
             </Link>
 

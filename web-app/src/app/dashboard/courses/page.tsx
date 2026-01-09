@@ -26,21 +26,21 @@ export default async function CoursesDashboard() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestión de Cursos</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Gestión de Clases</h1>
           <p className="text-sm text-gray-500 mt-1">Temporadas, horarios y asignación de entrenadores.</p>
         </div>
         <Link 
           href="/dashboard/courses/new" 
           className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-medium shadow-sm transition"
         >
-          + Nuevo Curso
+          + Nueva Clase
         </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses?.length === 0 ? (
           <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-            <p className="text-gray-500">No hay cursos creados todavía.</p>
+            <p className="text-gray-500">No hay clases creados todavía.</p>
             <p className="text-sm text-gray-400 mt-1">Crea el primero para empezar a inscribir alumnos.</p>
           </div>
         ) : (

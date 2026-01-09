@@ -15,7 +15,7 @@ export default async function NewCoursePage() {
   return (
     <div className="max-w-2xl mx-auto p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Nuevo Curso / Temporada</h1>
+        <h1 className="text-2xl font-bold">Nueva Clase</h1>
         <Link href="/dashboard/courses" className="text-gray-500">Cancelar</Link>
       </div>
 
@@ -24,7 +24,7 @@ export default async function NewCoursePage() {
         {/* Título y Coach */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nombre del Curso *</label>
+            <label className="block text-sm font-medium text-gray-700">Nombre de la Clase*</label>
             <input name="title" type="text" required placeholder="Ej. Pre-Competición 2026" className="mt-1 block w-full rounded-md border border-gray-300 p-2" />
           </div>
 
@@ -82,12 +82,12 @@ export default async function NewCoursePage() {
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
             <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900">
-              Curso Activo (Visible para inscripciones)
+              Clase Activa (Visible para inscripciones)
             </label>
           </div>
 
         <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
-          Crear Curso
+          Crear Clase
         </button>
       </form>
     </div>
