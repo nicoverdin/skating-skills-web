@@ -100,10 +100,17 @@ export default async function DashboardPage() {
 
         {/* Staff y Admin ven esto, Padres quizás solo lectura */}
         {(isAdmin || isCoach) && (
-          <Link href="/dashboard/blog" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition">
-            <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📰 Blog</h3>
-            <p className="mt-2 text-sm text-gray-500">Publicar noticias.</p>
-          </Link>
+          <> {/* <--- Añade esto */}
+            <Link href="/dashboard/blog" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">📰 Blog</h3>
+              <p className="mt-2 text-sm text-gray-500">Publicar noticias.</p>
+            </Link>
+
+            <Link href="/dashboard/gallery" className="group p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600">🖼️ Galería</h3>
+              <p className="mt-2 text-sm text-gray-500">Gestionar galería.</p>
+            </Link>
+          </>
         )}
       </div>
     </div>
